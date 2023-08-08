@@ -3,6 +3,7 @@ const Movie = require('../models/movie');
 const NotFoundError = require('../errors/NotFoundError');
 const ForbiddenError = require('../errors/ForbiddenError');
 const BadRequestError = require('../errors/BadRequestError');
+const AuthError = require('../errors/AuthError');
 
 const getMovies = (req, res, next) => {
   Movie.find({})
@@ -11,20 +12,21 @@ const getMovies = (req, res, next) => {
 };
 
 const createMovie = (req, res, next) => {
-  console.log(req.body);
-  Movie.create({ ...req.body, owner: req.user._id })
+  const data = { ...req.body, owner: req.user._id };
+  Movie.create(data)
     .then((movie) => res.status(201).send(movie))
-    .catch(next);
+    .catch((err) => (err.name === 'ValidationError' ? next(new AuthError('Некорректные данные пользователя')) : next(err)));
 };
 
 const deleteMovie = (req, res, next) => {
   Movie.findById(req.params.id)
     .then((movie) => {
+      console.log('found movie:', movie);
       if (!movie) throw new NotFoundError('Такого фильма не существует');
       else if (movie.owner.toString() !== req.user._id) throw new ForbiddenError('У вас нет прав для удаления фильма');
       else {
         Movie.deleteOne(movie)
-          .then((deletedMovie) => res.status(200).send(deletedMovie))
+          .then(() => res.status(200).send(movie))
           .catch(next);
       }
     })

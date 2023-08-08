@@ -33,7 +33,49 @@ const updateUser = (req, res, next) => {
     });
 };
 
+const login = (req, res, next) => {
+  const { email, password } = req.body;
+
+  User.findOne({ email })
+    .then((user) => {
+      if (!user) throw new AuthError('Неверный Email или пароль');
+      return bcrypt.compare(password, user.password)
+        .then((isEqual) => {
+          if (!isEqual) throw new AuthError('Неверный Email или пароль');
+          const token = jwt.sign({ _id: user._id }, process.env.NODE_ENV === 'production' ? process.env.JWT_SECRET : JWT_SECRET, { expiresIn: '7d' });
+          return res.status(200).send({ token });
+        });
+    })
+    .catch(next);
+};
+
+const createUser = (req, res, next) => {
+  const { name, email, password } = req.body;
+  bcrypt.hash(password, SALT_ROUNDS)
+    .then((hash) => {
+      User.create({
+        name, email, password: hash,
+      })
+        .then((newUser) => {
+          res.status(201).send({
+            name: newUser.name,
+            email: newUser.email,
+            _id: newUser._id,
+          });
+        })
+        .catch((err) => {
+          if (err.name === 'ValidationError') return next(new BadRequestError('Некорректные данные пользователя'));
+          if (err.code === 11000) return next(new AlreadyExistsError('Пользователь с таким email уже зарегистрирован'));
+          return next(err);
+        });
+    })
+    .catch(next);
+};
+
 module.exports = {
   getUser,
   updateUser,
+  login,
+  createUser,
+  JWT_SECRET,
 };

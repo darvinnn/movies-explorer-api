@@ -30,17 +30,17 @@ app.use(cors);
 
 app.use(requestLogger);
 app.use(limiter);
-// app.post('/signin', celebrate(loginJoiValidation), login);
-// app.post('/signup', celebrate(createUserJoiValidation), createUser);
+app.post('/signin', login);
+app.post('/signup', createUser);
 app.use(auth);
 app.use('/users', usersRoute);
-app.use('/films', moviesRoute);
+app.use('/movies', moviesRoute);
 app.use('/*', (req, res, next) => next(new NotFoundError('Такой страницы не существует')));
 
 app.use(errorLogger);
 app.use(errors());
 app.use(errorsHandler);
 
-mongoose.connect('mongodb://localhost:27017/moviesExplorer');
+mongoose.connect('mongodb://0.0.0.0:27017/moviesExplorer');
 
 app.listen(3000);
