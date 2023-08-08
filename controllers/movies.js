@@ -21,7 +21,6 @@ const createMovie = (req, res, next) => {
 const deleteMovie = (req, res, next) => {
   Movie.findById(req.params.id)
     .then((movie) => {
-      console.log('found movie:', movie);
       if (!movie) throw new NotFoundError('Такого фильма не существует');
       else if (movie.owner.toString() !== req.user._id) throw new ForbiddenError('У вас нет прав для удаления фильма');
       else {
