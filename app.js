@@ -6,7 +6,7 @@ const { errors, celebrate } = require('celebrate');
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
 const usersRoute = require('./routers/users');
-const cardsRoute = require('./routers/cards');
+const moviesRoute = require('./routers/movies');
 const { login, createUser } = require('./controllers/users');
 const auth = require('./middlewares/auth');
 const errorsHandler = require('./middlewares/errorsHandler');
@@ -28,25 +28,19 @@ app.use(helmet());
 app.use(bodyParser.json());
 app.use(cors);
 
-app.get('/crash-test', () => {
-  setTimeout(() => {
-    throw new Error('Сервер сейчас упадёт');
-  }, 0);
-});
-
 app.use(requestLogger);
-app.use(limiter); // Я не понял замечания. Стоит удалить лимитер?
-app.post('/signin', celebrate(loginJoiValidation), login);
-app.post('/signup', celebrate(createUserJoiValidation), createUser);
+app.use(limiter);
+// app.post('/signin', celebrate(loginJoiValidation), login);
+// app.post('/signup', celebrate(createUserJoiValidation), createUser);
 app.use(auth);
 app.use('/users', usersRoute);
-app.use('/cards', cardsRoute);
-app.use('/*', (req, res, next) => { next(new NotFoundError('Такой страницы не существует')); });
+app.use('/films', moviesRoute);
+app.use('/*', (req, res, next) => next(new NotFoundError('Такой страницы не существует')));
 
 app.use(errorLogger);
 app.use(errors());
 app.use(errorsHandler);
 
-mongoose.connect('mongodb://localhost:27017/mestodb');
+mongoose.connect('mongodb://localhost:27017/moviesExplorer');
 
 app.listen(3000);
