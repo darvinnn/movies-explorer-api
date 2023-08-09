@@ -30,8 +30,8 @@ app.use(cors);
 
 app.use(requestLogger);
 app.use(limiter);
-app.post('/signin', login);
-app.post('/signup', createUser);
+app.post('/signin', celebrate(loginJoiValidation), login);
+app.post('/signup', celebrate(createUserJoiValidation), createUser);
 app.use(auth);
 app.use('/users', usersRoute);
 app.use('/movies', moviesRoute);

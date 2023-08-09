@@ -4,8 +4,8 @@ const validationPattern = /^https?:\/\/([w]{3}\.)?[\w\d\-/#]+\.[\w\d\-/#]+/;
 
 const updateUserJoiValidation = {
   body: Joi.object().keys({
-    name: Joi.string().min(2).max(20).required(),
-    about: Joi.string().min(2).max(30).required(),
+    name: Joi.string().required(),
+    email: Joi.string().required().email(),
   }),
 };
 
@@ -18,24 +18,32 @@ const loginJoiValidation = {
 
 const createUserJoiValidation = {
   body: Joi.object().keys({
+    name: Joi.string().required(),
     email: Joi.string().required().email(),
     password: Joi.string().required(),
-    name: Joi.string().min(2).max(20),
-    about: Joi.string().min(2).max(30),
-    avatar: Joi.string().pattern(validationPattern),
   }),
 };
 
-const createCardJoiValidation = {
+const createMovieJoiValidation = {
   body: Joi.object().keys({
-    name: Joi.string().required().min(2).max(30),
-    link: Joi.string().pattern(validationPattern).required(),
+    country: Joi.string().required(),
+    director: Joi.string().required(),
+    duration: Joi.number().required(),
+    year: Joi.string().required(),
+    description: Joi.string().required(),
+    image: Joi.string().required().pattern(validationPattern),
+    trailerLink: Joi.string().required().pattern(validationPattern),
+    thumbnail: Joi.string().required().pattern(validationPattern),
+    owner: Joi.string().required(),
+    movieId: Joi.number().required(),
+    nameRU: Joi.string().required(),
+    nameEN: Joi.string().required(),
   }),
 };
 
-const changeCardJoiValidation = {
+const deleteMovieJoiValidation = {
   params: Joi.object().keys({
-    cardId: Joi.string().hex().length(24).required(),
+    id: Joi.string().hex().length(24).required(),
   }),
 };
 
@@ -43,6 +51,6 @@ module.exports = {
   updateUserJoiValidation,
   loginJoiValidation,
   createUserJoiValidation,
-  createCardJoiValidation,
-  changeCardJoiValidation,
+  createMovieJoiValidation,
+  deleteMovieJoiValidation,
 };

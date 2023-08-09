@@ -12,7 +12,11 @@ const JWT_SECRET = 'verysecuredphrse';
 
 const getUser = (req, res, next) => {
   User.findOne({ _id: req.user._id })
-    .then((user) => res.status(200).send(user))
+    .then((user) => res.status(200).send({
+      name: user.name,
+      email: user.email,
+      _id: user._id,
+    }))
     .catch((err) => (err.name === 'CastError' ? next(new BadRequestError('Что-то не так с id пользователя')) : next(err)));
 };
 
@@ -24,7 +28,13 @@ const updateUser = (req, res, next) => {
   })
     .then((user) => {
       if (!user) throw new NotFoundError('Такого пользователя не существует');
-      else res.send(user);
+      else {
+        res.send({
+          name: user.name,
+          email: user.email,
+          _id: user._id,
+        });
+      }
     })
     .catch((err) => {
       if (err.name === 'CastError') return next(new BadRequestError('Пользователь с указанным id не найден'));
