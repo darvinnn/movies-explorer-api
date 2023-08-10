@@ -9,6 +9,7 @@ const auth = require('../middlewares/auth');
 
 router.post('/signin', celebrate(loginJoiValidation), login);
 router.post('/signup', celebrate(createUserJoiValidation), createUser);
+router.post('/logout', (req, res) => res.clearCookie('jwt'));
 router.use(auth);
 router.use('/users', usersRoute);
 router.use('/movies', moviesRoute);
