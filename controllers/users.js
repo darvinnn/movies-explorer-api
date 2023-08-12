@@ -6,9 +6,9 @@ const NotFoundError = require('../errors/NotFoundError');
 const AuthError = require('../errors/AuthError');
 const AlreadyExistsError = require('../errors/AlreadyExistsError');
 const BadRequestError = require('../errors/BadRequestError');
+const { JWT_SECRET } = require('../utils/constants');
 
 const SALT_ROUNDS = 10;
-const JWT_SECRET = 'verysecuredphrse';
 
 const getUser = (req, res, next) => {
   User.findOne({ _id: req.user._id })
@@ -98,5 +98,4 @@ module.exports = {
   updateUser,
   login,
   createUser,
-  JWT_SECRET,
 };
