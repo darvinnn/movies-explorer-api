@@ -37,6 +37,7 @@ const updateUser = (req, res, next) => {
       }
     })
     .catch((err) => {
+      if (err.codeName === 'DuplicateKey') return next(new BadRequestError('Такой email уже занят'));
       if (err.name === 'CastError') return next(new BadRequestError('Пользователь с указанным id не найден'));
       if (err.name === 'ValidationError') return next(new AuthError('Некорректные данные пользователя'));
       return next(err);
