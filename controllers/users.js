@@ -63,8 +63,7 @@ const login = (req, res, next) => {
             .cookie('jwt', token, {
               maxAge: 3600000,
               httpOnly: true,
-              // eslint-disable-next-line no-undef
-              Secure,
+              sameSite: 'none',
             })
             .send(userInfo);
         });
