@@ -13,3 +13,7 @@ Node.js, Express.js, MongoDB, Nginx, Bash, REST API.
 ### Ссылка на проект:
 
 https://nikolaev-maxim-diplom.nomoreparties.co
+
+### Ссылка на backend:
+
+https://github.com/darvinnn/movies-explorer-frontend
