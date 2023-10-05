@@ -14,6 +14,6 @@ Node.js, Express.js, MongoDB, Nginx, Bash, REST API.
 
 https://nikolaev-maxim-diplom.nomoreparties.co
 
-### Ссылка на backend:
+### Ссылка на frontend репозиторий:
 
 https://github.com/darvinnn/movies-explorer-frontend
